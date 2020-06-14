@@ -28,7 +28,7 @@ void dfs(int root, int parent){
 
 		if(Low[child] == Num[child]) CritEdge++;
 
-		if(parent == 0){ // if current root is the first 
+		if(parent == -1){ // if current root is the first 
 			if(branches >= 2) CritVertex[root] = true;
 		}
 		else{
@@ -47,7 +47,7 @@ int main(){
 		edge[y].push_back(x);
 	}
 	for(int i = 1; i <= n; i++){
-		if(!Num[i]) dfs(i, 0);
+		if(!Num[i]) dfs(i, -1);
 	}
 	int res = 0;
 	for(int i = 1; i <= n; i++) if(CritVertex[i]) res++;

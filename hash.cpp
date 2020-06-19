@@ -1,8 +1,3 @@
-/*input
-3
-1 3 5
-*/
-
 /**
  *  Rabin Karp Algorithm  
  *  Written by Katorin
@@ -38,6 +33,7 @@ void init(){
     hsh[0] = str[0] - 'a' + 1;
     for(int i = 1; i < str.length(); i++){
         hsh[i] = (1ll * hsh[i - 1] * base) % mod  +  (str[i] - 'a' + 1);
+        hsh[i] %= mod;
     }
 }
 

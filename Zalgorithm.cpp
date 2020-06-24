@@ -20,11 +20,11 @@ const int N = 1e5 + 5;
 vector<int> getZ(string input){
 
     /* a a b a x a a b a c 
-	   |_____|   |_____|
-	   0 1 0 1 . 4 1 0 1 .
-		 -----     -----
-		 same pattern
-	   We don't have to "re-compare" those same patterns
+       |_____|   |_____|
+       0 1 0 1 . 4 1 0 1 .
+        -----     -----
+	same pattern
+	We don't have to "re-compare" those same patterns
     */
 	int L = 0, R = 0;
 	vector<int> Z;

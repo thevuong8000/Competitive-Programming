@@ -45,7 +45,13 @@ void unionMerge(int x, int y){ /* merge 2 group */
     pa[rootX] += pa[rootY]; 
     pa[rootY] = rootX;
 }
-
+int numGroup(int n){
+    int num_group = 0;
+    for(int i = 0; i < n; i++){
+    	if(pa[i] < 0) num_group++;
+    }
+    return num_group;
+}
 
 
 int main(){

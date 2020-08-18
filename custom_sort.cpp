@@ -7,3 +7,5 @@ sort(idx.begin(), idx.end(), [](const auto& a, const auto& b){
 sort(idx.begin(), idx.end(), [&A](const auto& a, const auto& b){
     return compare(A[a], A[b]);
 });
+
+/* WARNING: compare method should be absolute, for example a < b instead of a <= b */

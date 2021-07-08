@@ -10,10 +10,10 @@ using namespace std;
 #define endl '\n'
 
 class DSU{
-  private:
+private:
     // the number of distinct sets
     int numSets = 0;
-  public:
+public:
     // The number of elements
     int nElems;
 
@@ -22,67 +22,67 @@ class DSU{
     vector<int> pa;
     
     DSU(int nElems){
-      this->nElems = nElems;
-      this->numSets = nElems;
+        this->nElems = nElems;
+        this->numSets = nElems;
 
-      // Initially, each element is a distince set
-      pa.assign(nElems + 1, -1);
+        // Initially, each element is a distince set
+        pa.assign(nElems + 1, -1);
     }
 
     /* find the root of the set containing {elem} */
     int findPa(int elem){
-      return pa[elem] < 0 ? elem : (pa[elem] = findPa(pa[elem]));
+        return pa[elem] < 0 ? elem : (pa[elem] = findPa(pa[elem]));
     }
 
     /* get size of the set containing {elem} */
     int getSize(int elem){
-      return -pa[findPa(elem)];
+        return -pa[findPa(elem)];
     }
 
     /* check if 2 elements in the same union-set */
     bool isSameUnion(int x, int y){
-      return findPa(x) == findPa(y);
+        return findPa(x) == findPa(y);
     }
 
     /* merge 2 union-set */
     void merge(int x, int y){ 
-      if(isSameUnion(x, y)) return; 
+        if(isSameUnion(x, y)) return; 
 
-      int rootX = findPa(x);
-      int rootY = findPa(y);
+        int rootX = findPa(x);
+        int rootY = findPa(y);
       
-      this->numSets -= 1;
+        this->numSets -= 1;
 
-      /* This step will reduce the complexity to O(log(N)). This's called Union-by-rank. */
-      if(getSize(rootX) < getSize(rootY)) swap(rootX, rootY);
+        /* This step will reduce the complexity to O(log(N)). This's called Union-by-rank. */
+        if(getSize(rootX) < getSize(rootY)) swap(rootX, rootY);
 
-      pa[rootX] += pa[rootY]; 
-      pa[rootY] = rootX;
+        pa[rootX] += pa[rootY]; 
+        pa[rootY] = rootX;
     }
 
     /* get the number of sets */
     int getNumSets(){
-      return this->numSets; 
+        return this->numSets; 
     }
 
     /* DEBUG only */
     void printSets(){
-      vector<vector<int>> sets;
-      map<int, int> rootToIndex;
-      for(int i = 1; i <= this->nElems; i++){
-        int parent = findPa(i);
-        if(!rootToIndex.count(parent)){
-          rootToIndex[parent] = rootToIndex.size();
-          sets.push_back(vector<int>());
+        vector<vector<int>> sets;
+        map<int, int> rootToIndex;
+        for(int i = 1; i <= this->nElems; i++){
+            int parent = findPa(i);
+            if(!rootToIndex.count(parent)){
+                rootToIndex[parent] = rootToIndex.size();
+                sets.push_back(vector<int>());
+            }
+            int index = rootToIndex[parent];
+            sets[index].push_back(i);
         }
-        int index = rootToIndex[parent];
-        sets[index].push_back(i);
-      }
-      for(int i = 0; i < sets.size(); i++){
-        cout << "Union-Set " << i + 1 << ":";
-        for(int j : sets[i]) cout << " " << j;
-        cout << endl;
-      }
+        for(int i = 0; i < sets.size(); i++){
+            cout << "Union-Set " << i + 1 << ":";
+            for(int j : sets[i]) cout << " " << j;
+            cout << endl;
+        }
     }
 };
 

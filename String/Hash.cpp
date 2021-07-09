@@ -1,7 +1,7 @@
 /**
  *  Rabin Karp Algorithm  
  *  Written by Katorin
- *  Last edited: 19 June, 2020
+ *  Last edited: 9th July, 2021 
  */
 
 #include <bits/stdc++.h>
@@ -10,54 +10,63 @@ using namespace std;
 
 typedef pair<int, int> ii;
 
-const int mod = 1e9 + 7; /* mod is a prime */
-const int N = 1e5 + 5;
-const int base = 19; /* base is a prime */
+class StringHash {
+private:
+    int N = 1e5;
+    int mod = 1e9 + 7;
+    int base = 31;
+    vector<int> fact;
+    vector<int> hsh;
+    string str;
 
-int fact[N]; /* factorial */
-int hsh[N]; /* hash from idx 0, i.e. hsh[i] is the hash for substring from index 0 to i */
-string str; /* assume that str contains only lowercase characters */
-
-void init(){
-    /* factorial init */
-    fact[0] = 1;
-    for(int i = 1; i < N; i++) fact[i] = (1ll * fact[i - 1] * base) % mod;
-
-    /* hashing following rules:
-        a -> 1
-        b -> 2
-        c -> 3
-        ...
-        z -> 26
-    */
-    hsh[0] = str[0] - 'a' + 1;
-    for(int i = 1; i < str.length(); i++){
-        hsh[i] = (1ll * hsh[i - 1] * base) % mod  +  (str[i] - 'a' + 1);
-        hsh[i] %= mod;
-    }
-}
-
-int get_hash(int l, int r){ /* get hashing value of substring from index l to r */
-    int res = hsh[r];
-    if(l == 0) return res; /* return the value we've already initialized */
-
-    /* Follow the formular:
-        hash(l, r) = hash(0, r) - hash(0, l) * fact[r - l + 1] 
-    */
-    res = (res - 1ll * hsh[l - 1] * fact[r - l + 1] + 1ll * mod * mod) % mod;
+    void init(){
+        fact.push_back(1);
+        for(int i = 1; i <= N; i++) fact.push_back((1ll * fact.back() * base) % mod);
     
-    return res;
-}
+        hsh.push_back(str[0] - 'a' + 1);
+        for(int i = 1; i < N; i++){
+            int value = (1ll * hsh[i - 1] * base) % mod  +  (str[i] - 'a' + 1);
+            value %= mod;
+            hsh.push_back(value);
+        }
+    }
+
+public:
+    StringHash(string& str, int base = 31, int mod = 1e9 + 7){
+        this->str = str;
+        this->base = base;
+        this->mod = mod;
+        this->N = str.length();
+
+        init();
+    }
+
+    /**
+     * get hashing value of substring from index l to r 
+     */
+    int get(int l, int r){
+        int res = hsh[r];
+
+        /* return the value we've already initialized */
+        if(l == 0) return res;
+
+        /* Follow the formular:
+            hash(l, r) = hash(0, r) - hash(0, l) * fact[r - l + 1] 
+        */
+        res = (1ll * res - 1ll * hsh[l - 1] * fact[r - l + 1] + 1ll * mod * mod) % mod;
+        return res;
+    }
+};
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    str = "banana";
-    init();
-    bool checkTrue = get_hash(1, 3) == get_hash(3, 5); // both substring is "ana"
+    string str = "banana";
+    StringHash hasher(str);
+    bool checkTrue = hasher.get(1, 3) == hasher.get(3, 5); // both substring is "ana"
     cout << checkTrue << endl; // print true (or 1)
 
-    bool checkFalse = get_hash(0, 2) == get_hash(2, 4); // compare "ban" and "ana"
+    bool checkFalse = hasher.get(0, 2) == hasher.get(2, 4); // compare "ban" and "ana"
     cout << checkFalse << endl; // print false (or 0)
     return 0;
 }
